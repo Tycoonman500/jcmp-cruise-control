@@ -8,6 +8,7 @@ function CruiseControl:__init()
 	Events:Subscribe( "Render", self, self.Render )
 	Events:Subscribe( "InputPoll", self, self.InputPoll )
 	Events:Subscribe( "ModulesLoad", self, self.ModulesLoad )
+	Events:Subscribe( "PlayerDeath", self, self.PlayerDeath)
 end
 
 function CruiseControl:LocalPlayerChat( args )
@@ -35,11 +36,16 @@ function CruiseControl:LocalPlayerChat( args )
 end
 
 function CruiseControl:GetEnabled()
-	if self.enabled == false or LocalPlayer:GetWorldId() ~= -1 then
+	if self.enabled == false or LocalPlayer:GetWorld() ~= DefaultWorld then
 		return false
 	else
 		return true
-	end     
+	end
+end
+
+function CruiseControl:PlayerDeath()
+	self.enabled = false
+	print("disabled")
 end
 
 function CruiseControl:GetSpeed()
@@ -51,16 +57,17 @@ function CruiseControl:GetSpeed()
 end
 
 function CruiseControl:Render()
-	if Client:GetState() ~= GUIState.Game or not self:GetEnabled() then return end
+	if Game:GetState() ~= GUIState.Game or not self:GetEnabled() then return end
 	if not LocalPlayer:InVehicle() then return end
 
 	local text = "Cruise Control Speed: " .. tostring( self.speed ).."km/h"
+	local vec = Render.Size * Vector2(0.5, 1)
 
-	Render:DrawText( Vector2( 20, 230 ), text, Color( 255, 255, 255 ) )
+	Render:DrawText( vec, text, Color( 255, 255, 255 ) )
 end
 
 function CruiseControl:InputPoll()
-	if Client:GetState() ~= GUIState.Game or not self:GetEnabled() then return end
+	if Game:GetState() ~= GUIState.Game or not self:GetEnabled() then return end
 	if not LocalPlayer:InVehicle() then return end
 	local v = LocalPlayer:GetVehicle()
 
