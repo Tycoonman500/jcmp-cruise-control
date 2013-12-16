@@ -53,7 +53,7 @@ function CruiseControl:GetSpeed()
 	local vehicle = LocalPlayer:GetVehicle()
 
 	-- Multiply by 3.6 to get in km/h
-	return vehicle:GetLinearVelocity():Magnitude() * 3.6
+	return vehicle:GetLinearVelocity():Length() * 3.6
 end
 
 function CruiseControl:Render()
@@ -61,9 +61,9 @@ function CruiseControl:Render()
 	if not LocalPlayer:InVehicle() then return end
 
 	local text = "Cruise Control Speed: " .. tostring( self.speed ).."km/h"
-	local vec = Render.Size * Vector2(0.5, 1)
+	local text_width = Render:GetTextWidth(text)
 
-	Render:DrawText( vec, text, Color( 255, 255, 255 ) )
+	Render:DrawText(Vector2((Render.Width - text_width)/2, 5), text, Color( 255, 255, 255 ), TextSize.Default, 1)
 end
 
 function CruiseControl:InputPoll()
