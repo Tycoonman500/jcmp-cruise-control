@@ -1,1 +1,1 @@
-This is the cruise control script from JC2-MP beta tests
+Cruise Control script from the JC2-MP Beta tests
